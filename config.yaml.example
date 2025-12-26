@@ -1,0 +1,29 @@
+# Desktop File Organizer 設定ファイル
+# このファイルを config.yaml にコピーして使用してください
+
+# カスタムカテゴリの定義
+custom_categories:
+  # カテゴリ名: [拡張子のリスト]
+  Projects:
+    - .project
+    - .workspace
+
+  Screenshots:
+    - .screenshot
+
+  Ebooks:
+    - .epub
+    - .mobi
+    - .azw3
+
+# 除外するファイル名パターン
+exclude_patterns:
+  - "*.tmp"
+  - "*.temp"
+  - ".DS_Store"
+  - "Thumbs.db"
+
+# 特定のファイルを除外
+exclude_files:
+  - "important.txt"
+  - "README.md"
