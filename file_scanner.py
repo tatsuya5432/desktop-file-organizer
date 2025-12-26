@@ -1,5 +1,5 @@
 """
-デスクトップファイルをスキャンするモジュール
+ファイルをスキャンするモジュール
 """
 import os
 from pathlib import Path
@@ -7,17 +7,34 @@ from typing import List, Dict
 
 
 class FileScanner:
-    """デスクトップのファイルをスキャンするクラス"""
+    """ファイルをスキャンするクラス"""
 
-    def __init__(self, desktop_path: str = None):
+    def __init__(self, source_path: str = None):
         """
         Args:
-            desktop_path: デスクトップのパス。Noneの場合は自動検出
+            source_path: スキャン対象のパス。Noneの場合はダウンロードフォルダを使用
         """
-        if desktop_path:
-            self.desktop_path = Path(desktop_path)
+        if source_path:
+            self.source_path = Path(source_path)
         else:
-            self.desktop_path = self._get_desktop_path()
+            self.source_path = self._get_downloads_path()
+
+        if not self.source_path.exists():
+            raise FileNotFoundError(f"ディレクトリが見つかりません: {self.source_path}")
+
+    def _get_downloads_path(self) -> Path:
+        """ダウンロードフォルダのパスを取得"""
+        home = Path.home()
+        downloads = home / "Downloads"
+
+        # Linuxの場合、他のロケーションも試す
+        if not downloads.exists():
+            downloads = home / "ダウンロード"
+
+        if not downloads.exists():
+            raise FileNotFoundError("ダウンロードディレクトリが見つかりません")
+
+        return downloads
 
     def _get_desktop_path(self) -> Path:
         """デスクトップのパスを取得"""
@@ -35,7 +52,7 @@ class FileScanner:
 
     def scan(self, exclude_dirs: List[str] = None) -> List[Path]:
         """
-        デスクトップのファイルをスキャン
+        ソースディレクトリのファイルをスキャン
 
         Args:
             exclude_dirs: 除外するディレクトリ名のリスト
@@ -48,7 +65,7 @@ class FileScanner:
 
         files = []
 
-        for item in self.desktop_path.iterdir():
+        for item in self.source_path.iterdir():
             # ディレクトリは除外（整理済みフォルダなど）
             if item.is_dir():
                 continue

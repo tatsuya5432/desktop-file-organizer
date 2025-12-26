@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-Desktop File Organizer - デスクトップファイル整理ツール
+File Organizer - ファイル整理ツール
 
-デスクトップ上のファイルを自動的に整理します。
+ダウンロードフォルダのファイルをデスクトップに移動して整理します。
 """
 import argparse
 import sys
@@ -13,20 +13,28 @@ from file_organizer import FileOrganizer
 def main():
     """メイン関数"""
     parser = argparse.ArgumentParser(
-        description='デスクトップファイルを自動的に整理します',
+        description='ダウンロードフォルダのファイルをデスクトップに移動して整理します',
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog='''
 使用例:
-  python organizer.py                    # デスクトップを整理
-  python organizer.py --dry-run          # プレビューのみ（実際には移動しない）
-  python organizer.py --desktop ~/Desktop  # カスタムパスを指定
+  python organizer.py                              # ダウンロード→デスクトップへ整理
+  python organizer.py --dry-run                    # プレビューのみ（実際には移動しない）
+  python organizer.py --source ~/Downloads         # カスタムソースパスを指定
+  python organizer.py --dest ~/Desktop             # カスタムデスティネーションを指定
+  python organizer.py --source ~/Documents --dest ~/Desktop  # 両方指定
         '''
     )
 
     parser.add_argument(
-        '--desktop',
+        '--source',
         type=str,
-        help='デスクトップのパス（デフォルト: ~/Desktop）'
+        help='ソースディレクトリのパス（デフォルト: ~/Downloads）'
+    )
+
+    parser.add_argument(
+        '--dest',
+        type=str,
+        help='デスティネーションディレクトリのパス（デフォルト: ~/Desktop）'
     )
 
     parser.add_argument(
@@ -46,12 +54,14 @@ def main():
     try:
         # FileOrganizerを初期化
         organizer = FileOrganizer(
-            desktop_path=args.desktop,
+            source_path=args.source,
+            dest_path=args.dest,
             dry_run=args.dry_run
         )
 
-        print("デスクトップファイルを整理しています...")
-        print(f"対象ディレクトリ: {organizer.desktop_path}")
+        print("ファイルを整理しています...")
+        print(f"ソース: {organizer.source_path}")
+        print(f"デスティネーション: {organizer.dest_path}")
         print()
 
         # ファイルを整理

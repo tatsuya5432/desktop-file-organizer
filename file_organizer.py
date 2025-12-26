@@ -12,15 +12,26 @@ from file_classifier import FileClassifier
 class FileOrganizer:
     """ファイルを整理するクラス"""
 
-    def __init__(self, desktop_path: str = None, dry_run: bool = False):
+    def __init__(self, source_path: str = None, dest_path: str = None, dry_run: bool = False):
         """
         Args:
-            desktop_path: デスクトップのパス
+            source_path: ソースディレクトリのパス（デフォルト: ~/Downloads）
+            dest_path: デスティネーションディレクトリのパス（デフォルト: ~/Desktop）
             dry_run: True の場合、実際には移動しない（プレビューのみ）
         """
-        self.scanner = FileScanner(desktop_path)
+        self.scanner = FileScanner(source_path)
         self.classifier = FileClassifier()
-        self.desktop_path = self.scanner.desktop_path
+        self.source_path = self.scanner.source_path
+
+        # デスティネーションパスの設定
+        if dest_path:
+            self.dest_path = Path(dest_path)
+        else:
+            self.dest_path = self.scanner._get_desktop_path()
+
+        if not self.dest_path.exists():
+            raise FileNotFoundError(f"デスティネーションディレクトリが見つかりません: {self.dest_path}")
+
         self.dry_run = dry_run
         self.organized_folders = set()
 
@@ -44,8 +55,8 @@ class FileOrganizer:
             if category not in organized_files:
                 organized_files[category] = []
 
-            # 移動先のパスを決定
-            dest_dir = self.desktop_path / category
+            # 移動先のパスを決定（デスクトップ内のカテゴリフォルダ）
+            dest_dir = self.dest_path / category
             dest_path = dest_dir / file_path.name
 
             # 同名ファイルが存在する場合の処理
@@ -97,8 +108,8 @@ class FileOrganizer:
         if not file_list:
             return
 
-        # カテゴリディレクトリを作成
-        dest_dir = self.desktop_path / category
+        # カテゴリディレクトリを作成（デスクトップ内）
+        dest_dir = self.dest_path / category
         dest_dir.mkdir(exist_ok=True)
         self.organized_folders.add(category)
 
