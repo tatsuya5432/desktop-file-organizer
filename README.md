@@ -1,15 +1,16 @@
 # Desktop File Organizer 📁✨
 
-デスクトップのファイルを自動的に整理するPythonアプリケーションです。
+デスクトップやダウンロードフォルダのファイルを自動的に整理するPythonアプリケーションです。
 
 散らかったテキストメモファイルや画像、ドキュメントを、たった1コマンドですっきり整理！
 
 ## ✨ 特徴
 
-- 🔍 デスクトップ上のファイルを自動スキャン
+- 🔍 デスクトップ、ダウンロードフォルダのファイルを自動スキャン
 - 📂 ファイルタイプごとに自動分類（画像、ドキュメント、テキストファイルなど）
 - 🚀 適切なフォルダに自動移動
 - 📝 テキストメモファイルを専用フォルダ（TextNotes）に整理
+- 💾 ダウンロードフォルダ専用のスクリプトも付属
 - 👀 プレビューモードで安全に確認してから実行可能
 
 ## 🚀 クイックスタート（3ステップ）
@@ -26,6 +27,7 @@ pip3 install -r requirements.txt
 
 ### 2. まずはプレビューで確認（推奨）
 
+**デスクトップを整理する場合:**
 ```bash
 # Windowsの場合
 python organizer.py --dry-run
@@ -34,16 +36,35 @@ python organizer.py --dry-run
 python3 organizer.py --dry-run
 ```
 
+**ダウンロードフォルダを整理する場合:**
+```bash
+# 方法1: organizerスクリプトを使う
+python organizer.py --downloads --dry-run
+
+# 方法2: ダウンロード専用スクリプトを使う
+python downloads_organizer.py --dry-run
+```
+
 これで、実際にファイルを移動せずに、どう整理されるか確認できます。
 
 ### 3. 問題なければ実行！
 
+**デスクトップを整理:**
 ```bash
 # Windowsの場合
 python organizer.py
 
 # Mac/Linuxの場合
 python3 organizer.py
+```
+
+**ダウンロードフォルダを整理:**
+```bash
+# 方法1
+python organizer.py --downloads
+
+# 方法2
+python downloads_organizer.py
 ```
 
 ## 📖 詳しい使い方
@@ -57,27 +78,46 @@ python3 organizer.py
 ### プレビューモード（安全に確認）
 
 ```bash
+# デスクトップ
 python organizer.py --dry-run
+
+# ダウンロードフォルダ
+python organizer.py --downloads --dry-run
 ```
 
-### デスクトップのパスを指定
+### ダウンロードフォルダを整理
 
 ```bash
+# 方法1: --downloadsオプションを使う
+python organizer.py --downloads
+
+# 方法2: 専用スクリプトを使う
+python downloads_organizer.py
+```
+
+### カスタムパスを指定
+
+```bash
+# デスクトップのパスを指定
 python organizer.py --desktop /path/to/desktop
+
+# ダウンロードフォルダのパスを指定
+python downloads_organizer.py --path /path/to/downloads
 ```
 
 ### 詳細なログを表示
 
 ```bash
 python organizer.py -v
+python downloads_organizer.py -v
 ```
 
 ## 📁 整理後のフォルダ構造
 
-実行すると、デスクトップに以下のフォルダが自動作成され、ファイルが移動します：
+実行すると、デスクトップまたはダウンロードフォルダ内に以下のフォルダが自動作成され、ファイルが移動します：
 
 ```
-Desktop/
+Desktop/ または Downloads/
 ├── TextNotes/       # 📝 テキストファイル (.txt, .md, .note など)
 ├── Images/          # 🖼️  画像ファイル (.jpg, .png, .gif など)
 ├── Documents/       # 📄 ドキュメント (.pdf, .docx, .xlsx など)
@@ -85,10 +125,11 @@ Desktop/
 ├── Audio/           # 🎵 音声ファイル (.mp3, .wav など)
 ├── Archives/        # 📦 圧縮ファイル (.zip, .tar.gz など)
 ├── Code/            # 💻 コードファイル (.py, .js, .html など)
+├── Executables/     # 🚀 実行ファイル (.exe, .dmg, .deb など)
 └── Others/          # 📋 その他のファイル
 ```
 
-**特に、散らかりがちなテキストメモは `TextNotes` フォルダにまとめられます！**
+**特に、散らかりがちなテキストメモは `TextNotes` フォルダに、ダウンロードした実行ファイルは `Executables` フォルダにまとめられます！**
 
 ## ❓ よくある質問
 

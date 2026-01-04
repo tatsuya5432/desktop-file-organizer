@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-Desktop File Organizer - デスクトップファイル整理ツール
+Downloads Organizer - ダウンロードフォルダ整理ツール
 
-デスクトップ上のファイルを自動的に整理します。
+ダウンロードフォルダ内のファイルを自動的に整理します。
 """
 import argparse
 import sys
@@ -13,27 +13,20 @@ from file_organizer import FileOrganizer
 def main():
     """メイン関数"""
     parser = argparse.ArgumentParser(
-        description='デスクトップやダウンロードフォルダのファイルを自動的に整理します',
+        description='ダウンロードフォルダのファイルを自動的に整理します',
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog='''
 使用例:
-  python organizer.py                    # デスクトップを整理
-  python organizer.py --downloads        # ダウンロードフォルダを整理
-  python organizer.py --dry-run          # プレビューのみ（実際には移動しない）
-  python organizer.py --desktop ~/Desktop  # カスタムパスを指定
+  python downloads_organizer.py                    # ダウンロードフォルダを整理
+  python downloads_organizer.py --dry-run          # プレビューのみ（実際には移動しない）
+  python downloads_organizer.py --path ~/Downloads # カスタムパスを指定
         '''
     )
 
     parser.add_argument(
-        '--desktop',
+        '--path',
         type=str,
-        help='デスクトップのパス（デフォルト: ~/Desktop）'
-    )
-
-    parser.add_argument(
-        '--downloads',
-        action='store_true',
-        help='ダウンロードフォルダを整理する'
+        help='ダウンロードフォルダのパス（デフォルト: ~/Downloads）'
     )
 
     parser.add_argument(
@@ -51,19 +44,14 @@ def main():
     args = parser.parse_args()
 
     try:
-        # target_folderを決定
-        target_folder = 'downloads' if args.downloads else 'desktop'
-
-        # FileOrganizerを初期化
+        # FileOrganizerを初期化（downloadsモード）
         organizer = FileOrganizer(
-            desktop_path=args.desktop,
+            desktop_path=args.path,
             dry_run=args.dry_run,
-            target_folder=target_folder
+            target_folder='downloads'
         )
 
-        # メッセージを表示
-        folder_name = "ダウンロードフォルダ" if args.downloads else "デスクトップ"
-        print(f"{folder_name}のファイルを整理しています...")
+        print("ダウンロードフォルダのファイルを整理しています...")
         print(f"対象ディレクトリ: {organizer.desktop_path}")
         print()
 
