@@ -9,15 +9,19 @@ from typing import List, Dict
 class FileScanner:
     """デスクトップのファイルをスキャンするクラス"""
 
-    def __init__(self, desktop_path: str = None):
+    def __init__(self, desktop_path: str = None, target_folder: str = 'desktop'):
         """
         Args:
-            desktop_path: デスクトップのパス。Noneの場合は自動検出
+            desktop_path: 整理対象のパス。Noneの場合は自動検出
+            target_folder: 'desktop' または 'downloads'。desktop_pathがNoneの場合に使用
         """
         if desktop_path:
             self.desktop_path = Path(desktop_path)
         else:
-            self.desktop_path = self._get_desktop_path()
+            if target_folder == 'downloads':
+                self.desktop_path = self._get_downloads_path()
+            else:
+                self.desktop_path = self._get_desktop_path()
 
     def _get_desktop_path(self) -> Path:
         """デスクトップのパスを取得"""
@@ -32,6 +36,20 @@ class FileScanner:
             raise FileNotFoundError("デスクトップディレクトリが見つかりません")
 
         return desktop
+
+    def _get_downloads_path(self) -> Path:
+        """ダウンロードフォルダのパスを取得"""
+        home = Path.home()
+        downloads = home / "Downloads"
+
+        # 日本語のダウンロードフォルダも試す
+        if not downloads.exists():
+            downloads = home / "ダウンロード"
+
+        if not downloads.exists():
+            raise FileNotFoundError("ダウンロードディレクトリが見つかりません")
+
+        return downloads
 
     def scan(self, exclude_dirs: List[str] = None) -> List[Path]:
         """

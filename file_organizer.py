@@ -12,13 +12,14 @@ from file_classifier import FileClassifier
 class FileOrganizer:
     """ファイルを整理するクラス"""
 
-    def __init__(self, desktop_path: str = None, dry_run: bool = False):
+    def __init__(self, desktop_path: str = None, dry_run: bool = False, target_folder: str = 'desktop'):
         """
         Args:
-            desktop_path: デスクトップのパス
+            desktop_path: 整理対象のパス
             dry_run: True の場合、実際には移動しない（プレビューのみ）
+            target_folder: 'desktop' または 'downloads'。desktop_pathがNoneの場合に使用
         """
-        self.scanner = FileScanner(desktop_path)
+        self.scanner = FileScanner(desktop_path, target_folder)
         self.classifier = FileClassifier()
         self.desktop_path = self.scanner.desktop_path
         self.dry_run = dry_run
